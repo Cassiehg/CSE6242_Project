@@ -17,11 +17,28 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-  
+	  	<style>
+	      /* Always set the map height explicitly to define the size of the div
+	       * element that contains the map. */
+	      html, body, #map {
+				  width: 100%;
+				  height: 100%;
+				  margin: 0;
+				  padding: 0;
+				}
+				.layer, .layer svg {position: absolute;}
+				
+				.layer svg {
+				 width: 60px;
+				 height: 60px;
+				 padding-right: 100px;
+				 font: 10px sans-serif;
+				}
+	    </style>
 		</head>
 
 		<body>
-		
+			
 		  <div class="btn-group btn-group-toggle" data-toggle="buttons">
 			  <label class="btn btn-secondary active">
 			    <input type="radio" name="options" id="option1" autocomplete="off" checked> $50
@@ -33,62 +50,106 @@
 			    <input type="radio" name="options" id="option3" autocomplete="off"> $200
 			  </label>
 			</div>
+			<div id="map"></div>
 			<script type="text/javascript">
 			
 			/*global $*/
 			/*global d3*/
+			/*global google*/
+			var map;
+			var bound;
+				
+	      
 			$( document ).ready(function() {
 				console.log( "ready!" );
 				
 				
 				
 				d3.csv("../data/airbnb_demo.csv", function(dataset) {
-
+		
 					var margin = {top: 20, right: 10, bottom: 20, left: 10};
           var width = 800 - margin.left - margin.right;
           var height = 600 - margin.top - margin.bottom;
-					dataset.forEach(row => {
-						var tmp = parseFloat(row.longitude);
-						if (isNaN(tmp)){
-							console.log(row);
-					
-						}});
-					var xScale = d3.scale.linear()
-									 .domain([d3.min(dataset, function(d) { return d.latitude; }), 
-									 d3.max(dataset, function(d) { return d.latitude; })])
-									 .range([0, width]);
-									 
-					var yScale = d3.scale.linear()
-										 .domain([d3.min(dataset, function(d) { return d.longitude; }), 
-										 d3.max(dataset, function(d) { return d.longitude; })])
-										 .range([0, height]);         
-					var priceScale = d3.scale.linear()
-										 .domain([0,d3.max(dataset, function(d) { return d.price; })])
-										 .range([0, 5]); 
-									 
-					var svg = d3.select("body")
-						.append("svg")
-						.attr({
-                    'width': width + margin.left + margin.right,
-                    'height': height + margin.top + margin.bottom
-                })
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-						
-					svg.selectAll("circle")
-					 .data(dataset)
-					 .enter()
-					 .append("circle")
-							.attr("cx", function(d) {
-									return xScale(d.latitude);
-							})
-							.attr("cy", function(d) {
-									return yScale(d.longitude);
-							})
-							.attr("r", d => priceScale(d.price));
 
+          bound = new google.maps.LatLngBounds();
+					
+					for(var data in dataset){
+						dataset[data].latitude =  +parseFloat(dataset[data].latitude);
+						dataset[data].longitude =  +parseFloat(dataset[data].longitude);
 						
+						var long = +dataset[data].longitude;
+						var lat = +dataset[data].latitude;
+						// console.log(long + " " + lat);
+						bound.extend(new google.maps.LatLng(lat,long));
 						
+					}
+		
+					// var xScale = d3.scale.linear()
+					// 				 .domain([d3.min(dataset, function(d) { return d.latitude; }), 
+					// 				 d3.max(dataset, function(d) { return d.latitude; })])
+					// 				 .range([0, width]);
+									 
+					// var yScale = d3.scale.linear()
+					// 					 .domain([d3.min(dataset, function(d) { return d.longitude; }), 
+					// 					 d3.max(dataset, function(d) { return d.longitude; })])
+					// 					 .range([0, height]);         
+					// var priceScale = d3.scale.linear()
+					// 					 .domain([0,d3.max(dataset, function(d) { return d.price; })])
+					// 					 .range([0, 5]); 
+					
+					d3.selectAll('#map').attr('width',width - 200);
+					
+					map = new google.maps.Map(d3.select("#map").node(),{
+						zoom: 1,
+						center: new google.maps.LatLng(dataset[0].latitude, dataset[0].longitude),
+						mapTypeId: google.maps.MapTypeId.TERRAIN
+					});
+					
+					map.fitBounds(bound);
+					
+					var overlay = new google.maps.OverlayView();
+					overlay.onAdd = function(){
+						var layer = d3.select(this.getPanes().overlayMouseTarget).append("div")
+											.attr("class","layer");
+												
+						overlay.draw = function(){
+							var projection = this.getProjection();
+							var padding = 10;
+							
+							var marker = layer.selectAll("svg")
+														.data(dataset)
+															.each(transform) //update existing markers
+														.enter().append("svg")
+															.each(transform)
+															.attr("class","marker");
+						
+							function transform(d){
+								d = new google.maps.LatLng(+d.latitude,+d.longitude);
+								d = projection.fromLatLngToDivPixel(d);
+								return d3.select(this)
+											.style("left",(d.x - padding) + "px")
+											.style("top",(d.y - padding) + "px" );
+							}
+							
+							marker.append("circle")
+								.attr("r",5)
+								.attr("cx",padding)
+								.attr("cy",padding);
+								
+							marker.append("text")
+			          .attr("x", padding + 7)
+			          .attr("y", padding)
+			          .attr("dy", ".31em")
+			          .style("fill","blue")
+			          .style("stroke","blue")
+			          .text(function(d) { return d.price; });
+								
+							
+						};
+						
+					}
+					overlay.setMap(map);
+					
 				});
 				
 				
@@ -101,6 +162,8 @@
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 			<script src="https://d3js.org/d3.v3.min.js"></script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDvdyxZpXuv02KqZIdErEBon5C7_Z8F2g"
+    async defer></script>
 			
 		</body>
 	</html>
