@@ -65,7 +65,8 @@
 				
 				
 				
-				d3.csv("../data/airbnb_demo.csv", function(dataset) {
+				d3.csv("http://localhost:8000/airbnb_data/airbnb_demo.csv", function(dataset) {
+				// d3.csv("../airbnb_data/airbnb_demo.csv", function(dataset) {
 		
 					var margin = {top: 20, right: 10, bottom: 20, left: 10};
           var width = 800 - margin.left - margin.right;
