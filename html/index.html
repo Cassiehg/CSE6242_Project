@@ -58,16 +58,33 @@
 			/*global google*/
 			var map;
 			var bound;
-				
+			var heatmapData = []
+			var heatmap;
+      function eqfeed_callback() {
+      	d3.csv("../data/crime_demo_100.csv",function(dataset){
+	      	heatmapData = [];
+	      	// console.log(dataset)
+	      	
+	        for (var i = 0; i < dataset.length; i++) {
+	        	var lat =  +parseFloat(dataset[i]["Latitude"]);
+						var long =  +parseFloat(dataset[i]["Longitude"]);
+						var latLng = new google.maps.LatLng(lat, long);
+	          heatmapData.push(latLng);
+	        }
+	        heatmap = new google.maps.visualization.HeatmapLayer({
+	          data: heatmapData,
+	          map: map
+	        });
+	      	
+      	})
+        }
 	      
 			$( document ).ready(function() {
 				console.log( "ready!" );
 				
 				
-				
-				d3.csv("https://firebasestorage.googleapis.com/v0/b/cse6242-1522962742858.appspot.com/o/airbnb_demo.csv?alt=media&token=0f31451e-844e-4c76-88b7-adc0d90a8532", function(dataset) {
-					
-				// d3.csv("../airbnb_data/airbnb_demo.csv", function(dataset) {
+				// d3.csv("http://asd.orionhub.org:8000/airbnb_demo.csv", function(dataset) {
+			d3.csv("../data/airbnb_demo.csv", function(dataset) {
 		
 					var margin = {top: 20, right: 10, bottom: 20, left: 10};
           var width = 800 - margin.left - margin.right;
@@ -86,15 +103,6 @@
 						
 					}
 		
-					// var xScale = d3.scale.linear()
-					// 				 .domain([d3.min(dataset, function(d) { return d.latitude; }), 
-					// 				 d3.max(dataset, function(d) { return d.latitude; })])
-					// 				 .range([0, width]);
-									 
-					// var yScale = d3.scale.linear()
-					// 					 .domain([d3.min(dataset, function(d) { return d.longitude; }), 
-					// 					 d3.max(dataset, function(d) { return d.longitude; })])
-					// 					 .range([0, height]);         
 					// var priceScale = d3.scale.linear()
 					// 					 .domain([0,d3.max(dataset, function(d) { return d.price; })])
 					// 					 .range([0, 5]); 
@@ -109,6 +117,15 @@
 					
 					map.fitBounds(bound);
 					
+			  	// Create a <script> tag and set the USGS URL as the source.
+	        var script = document.createElement('script');
+	
+	        // This example uses a local copy of the GeoJSON stored at
+	        // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
+	        // script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
+	        // document.getElementsByTagName('head')[0].appendChild(script);
+					eqfeed_callback()
+				 
 					var overlay = new google.maps.OverlayView();
 					overlay.onAdd = function(){
 						var layer = d3.select(this.getPanes().overlayMouseTarget).append("div")
@@ -164,7 +181,7 @@
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 			<script src="https://d3js.org/d3.v3.min.js"></script>
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDvdyxZpXuv02KqZIdErEBon5C7_Z8F2g"
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDvdyxZpXuv02KqZIdErEBon5C7_Z8F2g&libraries=visualization"
     async defer></script>
 			
 		</body>
