@@ -38,6 +38,7 @@
 	</head>
 
 	<body>
+		<p>Hello <i class="material-icons">home</i> </p>
 
 		<div class="btn-group btn-group-toggle" data-toggle="buttons">
 			<label class="btn btn-secondary active">
@@ -60,6 +61,7 @@
 			var bound;
 			var heatmapData = []
 			var heatmap;
+			const HOUSE_ICON_SIZE = 25;
 			function eqfeed_callback() {
 		// d3.csv("https://firebasestorage.googleapis.com/v0/b/cse6242-1522962742858.appspot.com/o/crime_demo_100.csv?alt=media&token=c0a77a38-89ee-40e5-b222-0e6fd5e4b309",function(dataset){
 			d3.csv("https://firebasestorage.googleapis.com/v0/b/cse6242-1522962742858.appspot.com/o/crime_demo_10_000.csv?alt=media&token=3425db39-acb4-412c-8319-8504344c0173"
@@ -170,12 +172,11 @@
 							new_svgs = marker.enter().append("svg")
 								.each(transform)
 								.attr("class","marker");
-
-							new_svgs.append("circle")
-									.attr("r",5)
-									.attr("cx",padding)
-									.attr("cy",padding)
-									.style("fill","gray");
+// <i class="material-icons">home</i>
+							new_svgs.append("image")
+									.attr("xlink:href","https://image.flaticon.com/icons/svg/608/608671.svg")
+									.attr("width", HOUSE_ICON_SIZE)
+									.attr("height", HOUSE_ICON_SIZE)
 
 							new_svgs.append("text")
 							.attr("x", padding + 7)
@@ -207,7 +208,7 @@
 
 		});
 	</script>
-
+	<div>Icons made by <a href="https://www.flaticon.com/authors/swifticons" title="Swifticons">Swifticons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
