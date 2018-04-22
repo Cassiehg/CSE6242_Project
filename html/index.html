@@ -161,13 +161,32 @@
 							var data_to_draw = dataset.slice(0, no_of_drawings);
 
 
-							layer.selectAll("svg").remove()
+							// layer.selectAll("svg").remove();
+
 							var marker = layer.selectAll("svg")
-							.data(data_to_draw)
-								.each(transform) //update existing markers
-							.enter().append("svg")
+							.data(data_to_draw , function(d) { return d.id });
+
+							marker.each(transform) ;//update existing markers
+							new_svgs = marker.enter().append("svg")
 								.each(transform)
-								.attr("class","marker")
+								.attr("class","marker");
+
+							new_svgs.append("circle")
+									.attr("r",5)
+									.attr("cx",padding)
+									.attr("cy",padding)
+									.style("fill","gray");
+
+							new_svgs.append("text")
+							.attr("x", padding + 7)
+							.attr("y", padding)
+							.attr("dy", ".31em")
+							.style("fill","blue")
+							.style("stroke","blue")
+							.text(function(d) { return d.price; });
+
+							marker.exit()
+								.remove();
 
 							function transform(d){
 								d = new google.maps.LatLng(+d.latitude,+d.longitude);
@@ -178,22 +197,6 @@
 							}
 							
 							// console.log(map.getZoom());
-
-							marker.append("circle")
-							.attr("r",5)
-							.attr("cx",padding)
-							.attr("cy",padding)
-							.style("fill","gray");
-
-							marker.append("text")
-							.attr("x", padding + 7)
-							.attr("y", padding)
-							.attr("dy", ".31em")
-							.style("fill","blue")
-							.style("stroke","blue")
-							.text(function(d) { return d.price; });
-
-
 						};
 
 					}
