@@ -11,6 +11,7 @@
 
 	<!--Import Google Icon Font-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Alfa Slab One' rel='stylesheet'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 
@@ -43,36 +44,35 @@
 	#price_range {
 		margin: 0;
 		left: 10px;
-		width: 30%;
-		
+		width: 30%;	
 	}
 
 	#heatmap_show {
-        	left: 53%;
+        	left: 55%;
         	padding: 5px;
         	position: absolute;
-        	top: 200px;
+        	top: 160px;
         	z-index: 5;
-        	text-align: center;
-        	font-family: 'Roboto','sans-serif';
-        	line-height: 30px;
+        	text-align: left;
+        	font-family: 'Alfa Slab One';
+        	line-height: 5px;
         	padding-left: 10px;
-        	background-color: #fff;
-        	border: 1px solid #999;
+		color: white;
+        	background-color: #F1948A;
 	}
 	      
 	#heatmap_setting {
-        	left: 69%;
+        	left: 70.5%;
         	padding: 5px;
         	position: absolute;
-        	top: 200px;
+        	top: 160px;
         	z-index: 5;
-        	text-align: center;
-        	font-family: 'Roboto','sans-serif';
-        	line-height: 30px;
+        	text-align: left;
+        	font-family: 'Alfa Slab One';
+        	line-height: 5px;
         	padding-left: 10px;
-        	background-color: #fff;
-        	border: 1px solid #999;
+		color: white;
+        	background-color: #F1948A;
 	}
 
 	.tooltip {	
@@ -89,14 +89,11 @@
 
 <body style="margin-left:20px; background-color:white;">
 
-<div id="fullpage" class="container-fluid">
-
-<div id="firstPage" class="row section">
-	<div class="col-md-6 col-md-offset-3">
-	<h4><b>New York City - AirBnB</b></h4>
+<div class="col-md-6 col-md-offset-3">
+	<h4><b>New York City - AirBnB Safety Map</b></h4>
 	<p> This is a demo webpage for booking an AirBnB in New York City created for Georgia Tech CSE-6242 Final Project.<br/> The map is showing a heatmap of <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-YTD/5uac-w243">crime dataset</a> from New York City's OpenData webpage</p>
 	<form action="#">
-		<p><b>Price Range</b> <br/> Maximum price per night : $<b><span id="price_display">50</span></b></p>
+		<p><b>Price Range</b> <br/> Maximum Price / Night : $ <b><span id="price_display">50</span></b></p>
 		<p class="range-field">
 			<input type="range"
 			id="price_range"
@@ -104,26 +101,29 @@
 			max="100"
 			oninput="update_dataset(this.value);"
 			onchange="update_dataset(this.value);"/>
+		<br/>30
 		</p>
 	</form>
-</div>
-
+<img src='https://poloclub.github.io/img/poloclub-logo.png' alt="Mountain View" style="width:40px;height:80px;">
 <div id="heatmap_show">
-	<input type="button" value="Felony" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
-	<input type="button" value="Misdemeanor" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
-	<input type="button" value="Violation" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
+	<p>Crime Heatmaps</p>
+	<input type="button" value="Felony" onclick="window.open('https://raw.githubusercontent.com/ckwan48/CSE6242_Project/master/crime_heatmap_bylevel/whitecolor_sightstovisit_added/Felony.PNG','_blank')">
+	<input type="button" value="Misdemeanor" onclick="window.open('https://raw.githubusercontent.com/ckwan48/CSE6242_Project/master/crime_heatmap_bylevel/whitecolor_sightstovisit_added/Misdemeanor.PNG','_blank')">
+	<input type="button" value="Violation" onclick="window.open('https://raw.githubusercontent.com/ckwan48/CSE6242_Project/master/crime_heatmap_bylevel/whitecolor_sightstovisit_added/Violation.PNG','_blank')">
 
 </div>
 
 <div id="heatmap_setting">
-	<button onclick="toggleHeatmap()">Show Heatmap</button>
-	<button onclick="changeGradient()">Change gradient</button>
-	<button onclick="changeRadius()">Change radius</button>
-	<button onclick="changeOpacity()">Change opacity</button>
+	<p>Settings</p>
+	<button onclick="toggleHeatmap()">Heatmap</button>
+	<button onclick="changeGradient()">Gradient</button>
+	<button onclick="changeRadius2()">Radius: 2</button>
+	<button onclick="changeRadius3()">Radius: 3</button>
+	<button onclick="changeRadius4()">Radius: 4</button>
+	<button onclick="changeOpacity()">Opacity</button>
 </div>
 
-<div id="firstPage2" class="row section">
-	<div id="map" style="width:1900px;height:900px"></div>
+<div id="map" style="width:1900px;height:900px"></div>
 	<script type="text/javascript">
 		
 	/*global $*/
@@ -172,8 +172,16 @@
         heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
       }
 
-	function changeRadius() {
+	function changeRadius2() {
 		heatmap.set('radius', heatmap.get('radius') ? null : 20);
+	}
+
+	function changeRadius3() {
+		heatmap.set('radius', heatmap.get('radius') ? null : 30);
+	}
+
+	function changeRadius4() {
+		heatmap.set('radius', heatmap.get('radius') ? null : 40);
 	}
 
  	function changeOpacity() {
@@ -210,7 +218,6 @@
 				data: heatmapData,
 				map: map
 			});
-		
 		})
 	}
 
@@ -389,10 +396,6 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDvdyxZpXuv02KqZIdErEBon5C7_Z8F2g&libraries=visualization"
 	async defer></script>
 	<!-- <script src="//cdn.bootcss.com/noUiSlider/8.5.1/nouislider.js"></script> -->
-
-</div>
-
-</div>
 
 </body>
 </html>
