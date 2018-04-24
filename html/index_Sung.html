@@ -41,16 +41,31 @@
 	}
 
 	#price_range {
+		margin: 0;
 		left: 10px;
 		width: 30%;
 		
 	}
+
+	#heatmap_show {
+        	left: 53%;
+        	padding: 5px;
+        	position: absolute;
+        	top: 200px;
+        	z-index: 5;
+        	text-align: center;
+        	font-family: 'Roboto','sans-serif';
+        	line-height: 30px;
+        	padding-left: 10px;
+        	background-color: #fff;
+        	border: 1px solid #999;
+	}
 	      
-	#floating-panel {
+	#heatmap_setting {
         	left: 69%;
         	padding: 5px;
         	position: absolute;
-        	top: 300px;
+        	top: 200px;
         	z-index: 5;
         	text-align: center;
         	font-family: 'Roboto','sans-serif';
@@ -62,8 +77,8 @@
 
 	.tooltip {	
 		position: absolute;
-		text-align: center;
-		padding: 4px;
+		//text-align: center;
+		padding: 20px;
 		background: #fff;
 		border: 0px;
 		pointer-events: none;
@@ -72,18 +87,16 @@
 	</style>
 </head>
 
-<body style="margin-left:20px;">
+<body style="margin-left:20px; background-color:white;">
 
 <div id="fullpage" class="container-fluid">
 
 <div id="firstPage" class="row section">
 	<div class="col-md-6 col-md-offset-3">
-	<h4>New York City - AirBnB</h4>
-	<p> This is a demo website for booking an AirBnB in New York City created for Georgia Tech CSE-6242 Final Project.</p>
-	<p> The map is showing a heatmap of <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-YTD/5uac-w243">crime dataset</a> from New York City's OpenData webpage</p><br>
+	<h4><b>New York City - AirBnB</b></h4>
+	<p> This is a demo webpage for booking an AirBnB in New York City created for Georgia Tech CSE-6242 Final Project.<br/> The map is showing a heatmap of <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-YTD/5uac-w243">crime dataset</a> from New York City's OpenData webpage</p>
 	<form action="#">
-		<h6>Price Range</h6>
-		<p> Choose your max price by sliding the dot. Current max price is: $<span id="price_display">50</span></p>
+		<p><b>Price Range</b> <br/> Maximum price per night : $<b><span id="price_display">50</span></b></p>
 		<p class="range-field">
 			<input type="range"
 			id="price_range"
@@ -95,8 +108,15 @@
 	</form>
 </div>
 
-<div id="floating-panel">
-	<button onclick="toggleHeatmap()">Toggle Heatmap</button>
+<div id="heatmap_show">
+	<input type="button" value="Felony" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
+	<input type="button" value="Misdemeanor" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
+	<input type="button" value="Violation" onclick="window.open('https://developers.google.com/maps/documentation/urls/images/map-no-params.png','_blank')">
+
+</div>
+
+<div id="heatmap_setting">
+	<button onclick="toggleHeatmap()">Show Heatmap</button>
 	<button onclick="changeGradient()">Change gradient</button>
 	<button onclick="changeRadius()">Change radius</button>
 	<button onclick="changeOpacity()">Change opacity</button>
@@ -126,37 +146,39 @@
 	var overlay;
 	var no_of_drawings;
 
+	// toggle functions
+
 	function toggleHeatmap() {
 	heatmap.setMap(heatmap.getMap() ? null : map);
 	}
 
-      function changeGradient() {
-        var gradient = [
-          'rgba(0, 255, 255, 0)',
-          'rgba(0, 255, 255, 1)',
-          'rgba(0, 191, 255, 1)',
-          'rgba(0, 127, 255, 1)',
-          'rgba(0, 63, 255, 1)',
-          'rgba(0, 0, 255, 1)',
-          'rgba(0, 0, 223, 1)',
-          'rgba(0, 0, 191, 1)',
-          'rgba(0, 0, 159, 1)',
-          'rgba(0, 0, 127, 1)',
-          'rgba(63, 0, 91, 1)',
-          'rgba(127, 0, 63, 1)',
-          'rgba(191, 0, 31, 1)',
-          'rgba(255, 0, 0, 1)'
+	function changeGradient() {
+		var gradient = [
+		'rgba(0, 255, 255, 0)',
+		'rgba(0, 255, 255, 1)',
+		'rgba(0, 191, 255, 1)',
+		'rgba(0, 127, 255, 1)',
+		'rgba(0, 63, 255, 1)',
+		'rgba(0, 0, 255, 1)',
+		'rgba(0, 0, 223, 1)',
+		'rgba(0, 0, 191, 1)',
+		'rgba(0, 0, 159, 1)',
+		'rgba(0, 0, 127, 1)',
+ 		'rgba(63, 0, 91, 1)',
+          	'rgba(127, 0, 63, 1)',
+          	'rgba(191, 0, 31, 1)',
+          	'rgba(255, 0, 0, 1)'
         ]
         heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
       }
 
-      function changeRadius() {
-        heatmap.set('radius', heatmap.get('radius') ? null : 20);
-      }
+	function changeRadius() {
+		heatmap.set('radius', heatmap.get('radius') ? null : 20);
+	}
 
-      function changeOpacity() {
-        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-      }
+ 	function changeOpacity() {
+		heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+	}
 
 	function update_dataset(rat){
 		$("#price_display").text(rat);
@@ -172,7 +194,7 @@
 	};
 
 	function eqfeed_callback() {
-		d3.csv("../crime_data/crime_demo_10_000.csv",function(dataset){
+		d3.csv("https://raw.githubusercontent.com/ckwan48/CSE6242_Project/master/crime_data/crime_demo_10_000.csv",function(dataset){
 
 			heatmapData = [];
 			// console.log(dataset)
@@ -215,7 +237,7 @@
 		console.log( "ready!" );
 
 
-		d3.csv("../airbnb_data/airbnb_safety_demo.csv", function(_dataset) {
+		d3.csv("https://raw.githubusercontent.com/ckwan48/CSE6242_Project/master/airbnb_data/airbnb_safety_demo.csv", function(_dataset) {
 			dataset = _dataset;
 			
 			bound = new google.maps.LatLngBounds();
@@ -247,8 +269,8 @@
 			MAX_PRICE_IN_DATA = d3.max(dataset,d => d.price);
 			MIN_PRICE_IN_DATA = d3.min(dataset,d => d.price);
 				
-			$("#price_range").attr("max",MAX_PRICE_IN_DATA + 1);
-			$("#price_range").attr("min",MIN_PRICE_IN_DATA - 1);
+			$("#price_range").attr("max",MAX_PRICE_IN_DATA);
+			$("#price_range").attr("min",MIN_PRICE_IN_DATA);
 				
 			stored_data = shuffle(dataset);
 				
@@ -258,7 +280,7 @@
 			map = new google.maps.Map(d3.select("#map").node(),{
 				zoom: 11,
 				center: new google.maps.LatLng(dataset[0].latitude, dataset[0].longitude),
-				mapTypeId: "roadmap"
+				mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
 			
 			map.fitBounds(bound);
@@ -298,36 +320,40 @@
 								.data(data_to_draw , function(d) { return d.id });
 
 					marker.each(transform) ;//update existing markers
+
 					var safety_stars = "";
 					
+
 					var new_svgs = marker.enter().append("svg")
-
-							.on("mouseover", function(d) {		
-            							div.transition()		
-               							.duration(200)		
-               							.style("opacity", .9);		
+						.on("mouseover", function(d) {
+            						div.transition()		
+               						.duration(200)		
+               						.style("opacity", .9);
                								
-								var full_stars = "";
-               							for(var i=0;i<d.Safety;i++)
-               							full_stars += "<i class='material-icons'>star</i>";
+							var full_stars = "";
+               						for(var i=0;i<d.Safety;i++)
+               						full_stars += "<i class='material-icons'>star</i>";
                					
-								var empty_stars = "";
-               							for(var i=0;i<5 - d.Safety;i++)
-               							empty_stars += "<i class='material-icons'>star_border</i>";
+							var empty_stars = "";
+               						for(var i=0;i<5 - d.Safety;i++)
+               						empty_stars += "<i class='material-icons'>star_border</i>";
                					
-          							div.html(d.name + "<br/>"  + "Price: $" + d.price + " per night<br/>Safety level: " + full_stars + empty_stars)	
-               							.style("left", (d3.event.pageX) + "px")		
-               							.style("top", (d3.event.pageY - 28) + "px");	
-            						})
+          						div.html("<b>Name</b><br/>" + d.name + "<br/><br/>"
+								+ "<b>Host</b><br/>" + d.host_name + "<br/><br/>"
+								+ "<b>Price</b><br/>$" + d.price + " per night<br/><br/>"
+								+ "<b>Safety Level</b><br/>" + full_stars + empty_stars)	
+               						.style("left", (d3.event.pageX) + "px")
+               						.style("top", (d3.event.pageY - 28) + "px")
+               						.style("background", "white");
+            					})
             							
-							.on("mouseout", function(d) {		
-           							div.transition()		
-                						.duration(100)		
-                						.style("opacity", 0);	
-			        			})
-
-							.each(transform)
-							.attr("class","marker");
+						.on("mouseout", function(d) {		
+           						div.transition()		
+                					.duration(100)		
+                					.style("opacity", 0);	
+		        			})
+						.each(transform)
+						.attr("class","marker");
 				
 					
 					new_svgs.append("image")
