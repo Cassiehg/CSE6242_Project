@@ -41,7 +41,7 @@
 		      background: #fff;
 		      border: 0px;
 		      pointer-events: none;
-
+		 }
 		</style>
 	</head>
 
@@ -169,6 +169,7 @@
 							var data_to_draw = dataset.slice(0, no_of_drawings);
 
 							//define the div for the tooltip 
+							d3.selectAll(".tooltip").remove();
 							var div = d3.select("body").append("div")	
    							.attr("class", "tooltip")				
     						.style("opacity", 0);
