@@ -1,0 +1,15 @@
+# Site Settings
+title: Chris Kwan
+email: ckwan3@gatech.edu
+description: >
+  About me.
+baseurl: ""
+url: "http://localhost:4000"
+twitter_username: ckwan48
+github_username:  ckwan48
+# Build Settings
+sass:
+  sass_dir: _sass
+include: ['_pages']
+kramdown:
+  input: GFM
